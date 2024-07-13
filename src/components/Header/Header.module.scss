@@ -1,0 +1,19 @@
+.header{
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  background-color: yellow;
+}
+
+.add{
+  background: blue;
+  border-radius: 10px;
+  color: white;
+  padding: 10px;
+  border: none;
+
+  &:hover{
+    cursor: pointer;
+    background: black;
+  }
+}
