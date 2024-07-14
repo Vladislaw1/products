@@ -1,0 +1,48 @@
+.icon{
+  fill: white;
+  width: 24px;
+  height: 24px;
+
+  &:hover {
+    fill: yellow;
+  }
+}
+
+.iconModal{
+  width: 24px;
+  height: 24px;
+  fill: black;
+
+    &:hover {
+      fill: silver;
+      stroke: silver;
+    }
+}
+
+.iconModalXS{
+  width: 40px;
+  height: 40px;
+  fill: black;
+
+  &:hover {
+    fill: silver;
+    stroke: silver;
+  }
+}
+
+
+.plusIcon{
+  width: 40px;
+  height: 40px;
+}
+
+.disabledIcon{
+  fill: #cccccc;
+  stroke: #cccccc;
+
+    &:hover{
+      fill: #cccccc;
+      stroke: #cccccc;
+      cursor: no-drop;
+    }
+}

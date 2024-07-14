@@ -5,6 +5,7 @@ import {useEffect} from "react";
 import {ProductCard} from "../ProductCard";
 
 import styles from "./ProductsList.module.scss";
+import {Product} from "../../shared/types";
 
 export const ProductsList = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -25,6 +26,6 @@ export const ProductsList = () => {
     }
 
     return <ul className={styles.list}>
-        {products.map((product) => <ProductCard key={product.id} product={product}/>)}
+        {products.map((product: Product) => <ProductCard key={product.id} product={product}/>)}
     </ul>
 }

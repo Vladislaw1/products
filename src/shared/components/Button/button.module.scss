@@ -1,0 +1,9 @@
+.button{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+
+    &:hover > .icon{
+      fill: yellow;
+    }
+}

@@ -1,89 +1,92 @@
-import {useEffect, useState} from "react";
+import { FC, useCallback, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import cn from "classnames";
+
+import {MdOutlineSaveAlt} from "react-icons/md";
+import {IoAddSharp} from "react-icons/io5";
+import {CiBoxList} from "react-icons/ci";
+
 import {RootState} from "../../store/store.ts";
+
+import {Button, Input, useForm} from "../../shared";
+
+import {addNewProduct, updateProduct} from "../../store/slices/productsSlice.ts";
 import {closeModal} from "../../store/slices/modalSlice.ts";
-import {Button} from "../../shared/components";
-import {adedProduct, updateProduct} from "../../store/slices/productsSlice.ts";
+
+import {Product} from "../../shared";
+
+import iconStyles from '../../shared/styles/icons.module.scss'
+import {AllProductsList} from "../AllProductsList";
 
 import styles from './AddAndEditProductForm.module.scss'
 
-export const AddAndEditProductForm = () => {
-    const dispatch = useDispatch();
+export const AddAndEditProductForm: FC = () => {
+    const dispatch = useDispatch<any>();
 
-    const [product,setProduct] = useState<any>({
-        name: '',
-        type: '',
-        image: null
-    });
+    const [isOpenAllProduct,setIsOPenAllProduct] = useState(false)
+
+    const checkProduct = useSelector((state: RootState) => state.modal.product) as any
     const productFromList = useSelector((state: RootState) => state.modal.product);
 
-    const onChange = ({target}) => {
-        const {name,value} = target
-
-        setProduct((prevState)=> ({
-            ...prevState,
-            [name]: value
-        }))
+    const initialState  = productFromList || {
+        name: '',
+        type: '',
+        image: null,
+        id: ''
     }
 
-    const clearState = () => {
-        setProduct({
-            name: '',
-            type: '',
-            image: null
-        })
-    }
-
-    useEffect(() => {
-        if (productFromList) {
-            setProduct(productFromList)
-        }
-    }, [productFromList]);
-
-    const handleSubmit = () => {
+    const onSubmit = useCallback((product: Product) => {
         if(productFromList){
             dispatch(updateProduct({...product,id: product.id}))
         }else{
-            dispatch(adedProduct(product))
-
+            dispatch(addNewProduct(product))
         }
         dispatch(closeModal())
-        clearState()
-    };
+        reset()
+    },[dispatch])
 
-    return <form className={styles.form}>
-        <input
-            name={'name'}
-            type={'text'}
-            placeholder={'Назва продукту'}
-            onChange={onChange}
-            value={product.name}
-            className={styles.input}
-        />
-        <input
-            name={'type'}
-            type={'text'}
-            placeholder={'Тип продукту'}
-            onChange={onChange}
-            value={product.type}
-            className={styles.input}
-        />
-        <label className={styles.labelInputFile}>
-            {product.image  ? product.image.name : 'Виберіть зображення'}
-            <input
-                className={styles.inputFile}
+    const [data,reset,handleChange, handleSubmit] = useForm<Product>(initialState, onSubmit)
+
+    const isDisabled = (checkProduct && checkProduct.name === data.name) || data.type === '' || data.name === '' || !data.image
+
+    return <>
+        <form className={styles.form}>
+            <Input
+                name={'name'}
+                type={'text'}
+                placeholder={'Назва продукту'}
+                onChange={handleChange}
+                value={data.name}
+            />
+            <Input
+                name={'type'}
+                type={'text'}
+                placeholder={'Тип продукту'}
+                onChange={handleChange}
+                value={data.type}
+            />
+            <Input
                 name={'image'}
                 type={'file'}
+                onChange={handleChange}
                 accept={'image/*,.jpeg,.jpg,png,.web'}
-                onChange={(e) => setProduct((prevState) => ({
-                    ...prevState,
-                    image: e.target.files ? e.target?.files[0] : null
-                }))}
             />
-        </label>
-        <Button
-            onClick={handleSubmit}
-            text={productFromList ? 'Зберегти' : 'Додати'}
-        />
-    </form>
+        </form>
+        <div>
+            <Button
+                onClick={handleSubmit}
+                disabled={isDisabled}
+            >
+                {checkProduct ?  <MdOutlineSaveAlt className={cn(iconStyles.iconModal,{[iconStyles.disabledIcon]: isDisabled})}/> : <IoAddSharp className={cn(iconStyles.iconModalXS, {[iconStyles.disabledIcon]: isDisabled})}/>}
+            </Button>
+            {checkProduct &&
+                <>
+                    <Button onClick={() => setIsOPenAllProduct(true)}>
+                        <CiBoxList className={iconStyles.iconModal}/>
+                    </Button>
+                </>
+            }
+        </div>
+        {isOpenAllProduct && <AllProductsList close={() => setIsOPenAllProduct(false)} checkProduct={checkProduct}/>}
+    </>
 }
