@@ -6,7 +6,7 @@ import cn from "classnames";
 interface InputProps{
     name: string,
     type: InputType,
-    onChange: (event: ChangeEvent) => void,
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void,
     placeholder?: string,
     value?: any;
     style?: string;

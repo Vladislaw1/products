@@ -1,13 +1,13 @@
-import { useState} from 'react';
+import {ChangeEvent,useState} from 'react';
 
 export const useForm = <T,>(initialState: T, onSubmit: (data: T) => void = (data) => data) => {
     const [data,setData] = useState<any>(initialState);
 
-    const handleChange = ({target}:{target: HTMLInputElement}) => {
-        const {name,value} = target;
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const {name,value} = event.target;
 
-        if(target?.files){
-            setData({...data, [name]: target?.files[0]});
+        if(event.target?.files){
+            setData({...data, [name]: event.target?.files[0]});
         }else{
             setData({...data,[name]:value})
         }

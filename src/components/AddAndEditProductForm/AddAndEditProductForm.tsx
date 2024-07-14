@@ -47,7 +47,7 @@ export const AddAndEditProductForm: FC = () => {
 
     const [data,reset,handleChange, handleSubmit] = useForm<Product>(initialState, onSubmit)
 
-    const isDisabled = (checkProduct && checkProduct.name === data.name) || data.type === '' || data.name === '' || !data.image
+    const isDisabled = (checkProduct && checkProduct.name === data.name) || data.type === '' || data.name === '' || (!checkProduct && !data.image)
 
     return <>
         <form className={styles.form}>
